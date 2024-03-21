@@ -15,12 +15,9 @@ public class BoundaryAcheterProduit {
 	}
 
 	public void acheterProduit(String nomAcheteur) {
-		int choixUtilisateur = Clavier.entrerEntier("1 - je veux acheter un produit\n2 - je veux avoir une vue d'ensemble du marche\n3 - quitter l'application");
-		switch (choixUtilisateur) {
-		case 1:
 			String produit = Clavier.entrerChaine("Quel produit souhaitez vous acheter?");
 			Personnage[] vendeurs = controlAcheterProduit.trouverVendeurs(produit);
-			if (vendeurs.length == 0) System.out.println("“Désolé, personne ne vend ce produit au marché");
+			if (vendeurs == null) System.out.println("D�sol�, personne ne vend ce produit au march�");
 			else {
 				System.out.println("Chez quel commerçant(e) voulez vous acheter des "+produit+" ?");
 				for(int i=0;i!=vendeurs.length;i++) {
@@ -31,32 +28,18 @@ public class BoundaryAcheterProduit {
 					indiceVendeurChoix = Clavier.entrerEntier("");
 					if(indiceVendeurChoix > vendeurs.length || indiceVendeurChoix < 0) System.out.println("Vous devez entrer un nombre entre 1 et " + vendeurs.length );
 				}while (indiceVendeurChoix > vendeurs.length || indiceVendeurChoix < 0);
-				System.out.println(nomAcheteur + " se déplace jusqu'à l'etal de " + vendeurs[indiceVendeurChoix-1].getNom());
-				choixUtilisateur = Clavier.entrerEntier("\"Bonjour" + nomAcheteur + ", combien de "+ produit+" voulez vous acheter?");
-				int quantiteRestante = controlAcheterProduit.acheterProduit(nomAcheteur, vendeurs[indiceVendeurChoix - 1], choixUtilisateur);
-				if(quantiteRestante > 0 || choixUtilisateur==quantiteRestante) {
-					System.out.println(nomAcheteur+" achète "+ quantiteRestante + " " + produit +" à " +vendeurs[indiceVendeurChoix-1].getNom() + ".");
+				System.out.println(nomAcheteur + " se d�place jusqu'à l'etal de " + vendeurs[indiceVendeurChoix-1].getNom());
+				int choixUtilisateur = Clavier.entrerEntier("\"Bonjour" + nomAcheteur + ", combien de "+ produit+" voulez vous acheter?");
+				int quantiteAchetee = controlAcheterProduit.acheterProduit(nomAcheteur, vendeurs[indiceVendeurChoix - 1], choixUtilisateur);
+				if(quantiteAchetee == choixUtilisateur) {
+					System.out.println(nomAcheteur+" ach�te "+ quantiteAchetee + " " + produit +" à " +vendeurs[indiceVendeurChoix-1].getNom() + ".");
 				}
-				else if (quantiteRestante == 0) {
+				else if (quantiteAchetee == 0) {
 					System.out.println(nomAcheteur +" veut acheter " + choixUtilisateur + " " + produit +", malheureusement il n’en a plus");
 				}
-				else {
-					System.out.println(nomAcheteur + " veut acheter "+ choixUtilisateur + " " + produit + ", malheureusement "+ vendeurs[indiceVendeurChoix-1] + " n'en a plus que "+quantiteRestante+". "+nomAcheteur+" achète tout le stock de " + vendeurs[indiceVendeurChoix-1]);
+				else if (quantiteAchetee < choixUtilisateur && quantiteAchetee != 0) {
+					System.out.println(nomAcheteur + " veut acheter "+ choixUtilisateur + " " + produit + ", malheureusement "+ vendeurs[indiceVendeurChoix-1].getNom() + " n'en a plus que "+quantiteAchetee+". "+nomAcheteur+" ach�te tout le stock de " + vendeurs[indiceVendeurChoix-1].getNom());
 				}
 			}
-			break;
-		case 2:
-			String[] data = controlAcheterProduit.donnerInfosMarche();
-			if (data.length == 0) System.out.println("Le marché est vide, revenez plus tard.");
-			else {
-				System.out.println(nomAcheteur + ", vous trouverez au marché :");
-				for(int i=0;i!=data.length;i+=3) {
-					System.out.println(data[i] +" qui vend " + data[i+1] +" " +data[i+2]+".");
-				}
-			}
-			break;
-		default:
-			break;
-		}
 	}
 }
