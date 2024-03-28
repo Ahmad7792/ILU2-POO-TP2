@@ -25,7 +25,7 @@ public class ControlAcheterProduit {
 	public Personnage[] trouverVendeurs(String produit) {
 		return village.rechercherVendeursProduit(produit);
 	}
-	public int acheterProduit(String acheteur,Personnage vendeur, int quantite) {
+	public int acheterProduit(Personnage vendeur, int quantite) {
 		Etal etal = village.rechercherEtal((Gaulois) vendeur);
 		return etal.acheterProduit(quantite);
 	}
